@@ -1,7 +1,9 @@
 #!/bin/bash
 
 REMOTE=$1
-if [ "z${REMOTE}z" = "zz" ]; then
+echo "$REMOTE" | grep -E '^[0-9]+$' > /dev/null
+IS_DIGIT=$?
+if [ "z${REMOTE}z" = "zz" -o "$IS_DIGIT" = '0' ]; then
   REMOTE='echo '
 else
   shift
