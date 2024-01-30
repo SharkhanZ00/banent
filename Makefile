@@ -1,16 +1,17 @@
 #!/bin/make
 
 ROOT=/usr/local
+INSTALL_CMD=install
 
 first: all
 
 all: banent unbanent
 
-banent:
-	ln -s banent.sh banent
+banent: banent.sh
+	ln -sf banent.sh banent
 
-unbanent:
-	ln -s banent.sh unbanent
+unbanent: banent.sh
+	ln -sf banent.sh unbanent
 
 clean:
 	rm banent unbanent
@@ -18,8 +19,9 @@ clean:
 install:
 	test -d ${ROOT}/bin
 	cp banent.sh ${ROOT}/bin
-	cd ${ROOT}/bin && ln -s banent.sh banent && ln -s banent.sh unbanent
+	${INSTALL_CMD} ${ROOT}/bin && ln -sf banent.sh banent && ln -sf banent.sh unbanent
+	${INSTALL_CMD} banent.sudoers /etc/sudoers.d
 
 uninstall:
 	test -d ${ROOT}
-	rm -f ${ROOT}/bin/banent.sh ${ROOT}/bin/banent ${ROOT}/bin/unbanent
+	rm -f ${ROOT}/bin/banent.sh ${ROOT}/bin/banent ${ROOT}/bin/unbanent /etc/sudoers.d/banent.sudoers
