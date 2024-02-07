@@ -1,10 +1,15 @@
 #!/bin/bash
 
+BAN_TEMP='uci set firewall.@rule[$CONF].enabled=1'
+UNBAN_TEMP='uci revert firewall.@rule[$CONF]'
+
 REMOTE=$1
 echo "$REMOTE" | grep -E '^[0-9]+$' > /dev/null
 IS_DIGIT=$?
 if [ "z${REMOTE}z" = "zz" -o "$IS_DIGIT" = '0' ]; then
   REMOTE='echo '
+  BAN_TEMP='sudo banent'
+  UNBAN_TEMP='sudo unbanent'
 else
   shift
 fi
@@ -15,12 +20,12 @@ if [ "z${CONFS}z" = "zz" ]; then
 fi
 REMOTE_CMD=''
 for CONF in $CONFS; do
-  BAN="uci set firewall.@rule[$CONF].enabled=1"
+  BAN=eval echo $BAN_TEMP
   ROLE=$(basename $0)
   if [ "$ROLE" = "unbanent" ]; then
-    BAN="uci revert firewall.@rule[$CONF]"
+    BAN=eval echo $UNBAN_TEMP
   fi
-  REMOTE_CMD="$REMOTE_CMD $BAN &&"
+  REMOTE_CMD="$REMOTE_CMD $BAN &&"-orang
 done
 REMOTE_CMD="$REMOTE_CMD fw3 reload"
 $REMOTE $REMOTE_CMD
