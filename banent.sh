@@ -25,7 +25,7 @@ for CONF in $CONFS; do
   if [ "$ROLE" = "unbanent" ]; then
     BAN=eval echo $UNBAN_TEMP
   fi
-  REMOTE_CMD="$REMOTE_CMD $BAN &&"-orang
+  REMOTE_CMD="$REMOTE_CMD $BAN &&"
 done
 REMOTE_CMD="$REMOTE_CMD fw3 reload"
 $REMOTE $REMOTE_CMD

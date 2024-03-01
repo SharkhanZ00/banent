@@ -7,7 +7,7 @@ INSTALL_CMD=install
 
 BUILD=./temp
 BINDIR=${ROOT}/bin
-TARBALL=banent.tar
+TARBALL=banent.tgz
 
 first: all
 
@@ -30,7 +30,7 @@ install:
 	cd ${BINDIR} && ln -sf banent.sh banent && ln -sf banent.sh unbanent
 	test -d ${ETC} || mkdir -p ${ETC}
 	test -d ${ETC}/sudoers.d || mkdir -p ${ETC}/sudoers.d
-	${INSTALL_CMD} banent.sudoers ${ETC}/sudoers.d
+	${INSTALL_CMD} ../banent.sudoers ${ETC}/sudoers.d
 
 uninstall:
 	rm -f ${ETC}/sudoers.d/banent.sudoers
@@ -55,4 +55,4 @@ ${BINDIR}/banent.sh: ${BUILD}/banent.sh ${BUILD}/Makefile
 	cd ./temp && make && make install
 
 ${TARBALL}: ${BINDIR}/banent.sh ${BUILD}/banent.sudoers
-	tar -C ./temp -cf ${TARBALL} overlay/
+	tar -C ./temp -czf ${TARBALL} overlay/
