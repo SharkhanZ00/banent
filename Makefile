@@ -3,7 +3,9 @@
 ROOT=/
 ETC=${ROOT}/etc
 LOCAL=${ROOT}/usr/local
-INSTALL_CMD=install
+INSTALL_CMD=cp
+SUFFIX=-call
+BANENT=banent${SUFFIX}.sh
 
 BUILD=./temp
 BINDIR=${ROOT}/bin
@@ -13,11 +15,11 @@ first: all
 
 all: banent unbanent
 
-banent: banent.sh
-	ln -sf banent.sh banent
+banent: banent${SUFFIX}.sh
+	ln -sf banent${SUFFIX}.sh banent
 
-unbanent: banent.sh
-	ln -sf banent.sh unbanent
+unbanent: banent${SUFFIX}.sh
+	ln -sf banent${SUFFIX}.sh unbanent
 
 clean:
 	rm -f banent unbanent
@@ -26,33 +28,35 @@ clean:
 
 install:
 	test -d ${BINDIR} || mkdir -p ${BINDIR}
-	${INSTALL_CMD} banent.sh ${BINDIR}
-	cd ${BINDIR} && ln -sf banent.sh banent && ln -sf banent.sh unbanent
+	${INSTALL_CMD} banent${SUFFIX}.sh ${BINDIR}
+	cd ${BINDIR} && ln -sf banent${SUFFIX}.sh banent && ln -sf banent${SUFFIX}.sh unbanent
 	test -d ${ETC} || mkdir -p ${ETC}
 	test -d ${ETC}/sudoers.d || mkdir -p ${ETC}/sudoers.d
-	${INSTALL_CMD} ../banent.sudoers ${ETC}/sudoers.d
+	${INSTALL_CMD} banent.sudoers ${ETC}/sudoers.d
 
 uninstall:
 	rm -f ${ETC}/sudoers.d/banent.sudoers
 	test -d ${LOCAL}
-	rm -f ${BINDIR}/banent.sh ${BINDIR}/banent ${BINDIR}/unbanent
+	rm -f ${BINDIR}/banent${SUFFIX}.sh ${BINDIR}/banent ${BINDIR}/unbanent
 
-owrt_pack: ${BUILD}/banent.sh ${BUILD}/Makefile ${BUILD}/banent.sudoers ${BINDIR}/banent.sh ${TARBALL}
+${BUILD}/banent-call.sh: banent-call.sh Makefile
+	test -d ${BUILD} || mkdir -p ${BUILD}
+	${INSTALL_CMD} banent-call.sh ${BUILD}/
 
-${BUILD}/banent.sh: banent.sh Makefile
-	mkdir -p ${BUILD}
-	sed -e 's|#!/bin/bash|#!/bin/ash|' -e "s|REMOTE='echo '|REMOTE=''|" banent.sh > ${BUILD}/banent.sh
+${BUILD}/banent-impl.sh: banent-impl.sh Makefile
+	test -d ${BUILD} || mkdir -p ${BUILD}
+	${INSTALL_CMD} banent-impl.sh ${BUILD}/
 
 ${BUILD}/Makefile: Makefile
-	mkdir -p ${BUILD}
-	sed 's|ROOT=/|ROOT=overlay/upper|' Makefile > ${BUILD}/Makefile
+	test -d ${BUILD} || mkdir -p ${BUILD}
+	sed -e 's|ROOT=/|ROOT=overlay/upper|' -e 's/SUFFIX=-call/SUFFIX=-impl/' Makefile > ${BUILD}/Makefile
 
 ${BUILD}/banent.sudoers: banent.sudoers
-	mkdir -p ${BUILD}
-	install banent.sudoers ${BUILD}/banent.sudoers
+	test -d ${BUILD} || mkdir -p ${BUILD}
+	${INSTALL_CMD} banent.sudoers ${BUILD}/
 
-${BINDIR}/banent.sh: ${BUILD}/banent.sh ${BUILD}/Makefile
+${BINDIR}/banent${SUFFIX}.sh: ${BUILD}/banent-call.sh ${BUILD}/banent-impl.sh ${BUILD}/Makefile ${BUILD}/banent.sudoers
 	cd ./temp && make && make install
 
-${TARBALL}: ${BINDIR}/banent.sh ${BUILD}/banent.sudoers
+${TARBALL}: ${BINDIR}/banent${SUFFIX}.sh
 	tar -C ./temp -czf ${TARBALL} overlay/

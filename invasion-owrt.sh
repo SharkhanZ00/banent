@@ -3,7 +3,8 @@
 REMOTES="root@router"
 
 test -f $HOME/.ssh/id_rsa.pub || exit 1
-TAR=$(base64 -w0 banent.tgz)
+test -f ./banent.tgz || exit 2
+TAR=$(base64 -w0 ./banent.tgz)
 SSH_PK=$(cat $HOME/.ssh/id_rsa.pub | base64 -w0)
 
 SCRIPT="\
@@ -14,6 +15,6 @@ chown -R hass-rpc:users /overlay/upper/home/hass-rpc/.ssh/authorized_keys && chm
 
 for REMOTE in $REMOTES; do
 
-  ssh $REMOTE -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa "$SCRIPT"
+  ssh '-oHostKeyAlgorithms=+ssh-rsa' '-oPubkeyAcceptedKeyTypes=+ssh-rsa' $REMOTE "$SCRIPT"
 
 done
