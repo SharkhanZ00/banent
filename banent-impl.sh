@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 BAN_TEMP='uci set firewall.@rule[$CONF].enabled=1'
 UNBAN_TEMP='uci revert firewall.@rule[$CONF]'
@@ -8,14 +8,14 @@ if [ "z${CONFS}z" = "zz" ]; then
   CONFS='0'
 fi
 
-REMOTE_CMD=''
+LOCAL_CMD=''
 for CONF in $CONFS; do
   BAN=eval echo $BAN_TEMP
   ROLE=$(basename $0)
   if [ "$ROLE" = "unbanent" ]; then
     BAN=eval echo $UNBAN_TEMP
   fi
-  REMOTE_CMD="$REMOTE_CMD $BAN &&"
+  LOCAL_CMD="$LOCAL_CMD $BAN &&"
 done
-REMOTE_CMD="$REMOTE_CMD fw3 reload"
-$REMOTE $REMOTE_CMD
+LOCAL_CMD="$LOCAL_CMD fw3 reload"
+$LOCAL_CMD

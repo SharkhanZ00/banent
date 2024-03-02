@@ -6,6 +6,8 @@ IS_DIGIT=$?
 if [ "z${REMOTE}z" = "zz" -o "$IS_DIGIT" = '0' ]; then
   exit 1
 else
+  #TODO check $REMOTE begins with sss
+  REMOTE="$REMOTE  -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa" #TODO remove then OpenWrt (powered Dropbear SSH) starts support modern cyphers
   shift
 fi
 
@@ -14,13 +16,8 @@ if [ "z${CONFS}z" = "zz" ]; then
   CONFS='0'
 fi
 
-REMOTE_CMD=eval echo $BAN_TEMP
-ROLE=$(basename $0)
-if [ "$ROLE" = "unbanent" ]; then
-  REMOTE_CMD=eval echo $UNBAN_TEMP
-fi
+ROLE="sudo $(basename $0)"
 for CONF in $CONFS; do
-  REMOTE_CMD="$REMOTE_CMD $CONF &&"
+  REMOTE_CMD="$REMOTE_CMD $CONF "
 done
-REMOTE_CMD="$REMOTE_CMD fw3 reload"
 $REMOTE $REMOTE_CMD
