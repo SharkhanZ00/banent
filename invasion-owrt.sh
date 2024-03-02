@@ -11,7 +11,7 @@ SCRIPT="\
 /bin/ash -c 'cat /etc/passwd | grep hass-rpc > /dev/null || useradd -N -r -m hass-rpc -s /bin/ash && \
 echo $TAR | base64 -d | tar -vzx -C / && \
 mkdir -p /overlay/upper/home/hass-rpc/.ssh && echo '$SSH_PK' | base64 -d >> /overlay/upper/home/hass-rpc/.ssh/authorized_keys && \
-chown -R hass-rpc:users /overlay/upper/home/hass-rpc/.ssh/authorized_keys && chmod 0600 /overlay/upper/home/hass-rpc/.ssh/authorized_keys && chmod 0700 /overlay/upper/home/hass-rpc/.ssh'"
+chown -R hass-rpc:users /overlay/upper/home/hass-rpc && chmod 0600 /overlay/upper/home/hass-rpc/.ssh/authorized_keys && chmod 0700 /overlay/upper/home/hass-rpc/.ssh'"
 
 for REMOTE in $REMOTES; do
 
