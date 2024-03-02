@@ -8,8 +8,8 @@ echo "$REMOTE" | grep -E '^[0-9]+$' > /dev/null
 IS_DIGIT=$?
 if [ "z${REMOTE}z" = "zz" -o "$IS_DIGIT" = '0' ]; then
   REMOTE='echo '
-  BAN_TEMP='sudo banent'
-  UNBAN_TEMP='sudo unbanent'
+  BAN_TEMP='sudo banent $CONF'
+  UNBAN_TEMP='sudo unbanent $CONF'
 else
   shift
 fi
