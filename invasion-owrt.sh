@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REMOTES="root@router"
+REMOTES=$*
 
 test -f $HOME/.ssh/id_rsa.pub || exit 1
 test -f ./banent.tgz || exit 2
