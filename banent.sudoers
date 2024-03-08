@@ -1,1 +1,1 @@
-hass-rpc  ALL=(root:root) /ur/local/bin/banent [[digit]]+ | /ur/local/bin/unbanent [[digit]]+
+hass-rpc  ALL=(root:root) /bin/banent [[digit]]+ | /bin/unbanent [[digit]]+
