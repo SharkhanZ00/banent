@@ -8,9 +8,9 @@ TAR=$(base64 -w0 ./banent.tgz)
 SSH_PK=$(cat $HOME/.ssh/id_rsa.pub | base64 -w0)
 
 SCRIPT="\
-/bin/ash -c 'cat /etc/passwd | grep hass-rpc > /dev/null || useradd -N -r -m hass-rpc -s /bin/ash && \
+/bin/ash -c 'cat /etc/passwd | grep -qF -e hass-rpc || useradd -N -r -m hass-rpc -s /bin/ash && \
 echo $TAR | base64 -d | tar -zx -C / && \
-mkdir -p /overlay/upper/home/hass-rpc/.ssh && ( grep -qvF `echo -n $SSH_PK | base64 -d` /overlay/upper/home/hass-rpc/.ssh/authorized_keys || ( echo '$SSH_PK' | base64 -d >> /overlay/upper/home/hass-rpc/.ssh/authorized_keys ) ) && \
+mkdir -p /overlay/upper/home/hass-rpc/.ssh && ( grep -qvF -e `echo -n $SSH_PK | base64 -d` /overlay/upper/home/hass-rpc/.ssh/authorized_keys || ( echo '$SSH_PK' | base64 -d >> /overlay/upper/home/hass-rpc/.ssh/authorized_keys ) ) && \
 chown -R hass-rpc:users /overlay/upper/home/hass-rpc && chmod 0600 /overlay/upper/home/hass-rpc/.ssh/authorized_keys && chmod 0700 /overlay/upper/home/hass-rpc/.ssh && echo Invasion successful'"
 
 for REMOTE in $REMOTES; do
