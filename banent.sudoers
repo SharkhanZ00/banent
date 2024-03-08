@@ -1,1 +1,1 @@
-hass-rpc  ALL=(root:root) /bin/banent [[digit]]+ | /bin/unbanent [[digit]]+
+hass-rpc  ALL=(root:root) NOPASSWD: banent [[digit]]+ | unbanent [[digit]]+
