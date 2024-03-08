@@ -59,4 +59,4 @@ ${BINDIR}/banent${SUFFIX}.sh: ${BUILD}/banent-call.sh ${BUILD}/banent-impl.sh ${
 	cd ./temp && make && make install
 
 ${TARBALL}: ${BINDIR}/banent${SUFFIX}.sh
-	tar -C ./temp -czf ${TARBALL} overlay/
+	tar -C ./temp --owner=root --group=root -czf ${TARBALL} overlay/
