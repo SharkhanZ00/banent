@@ -4,6 +4,7 @@ ROOT=/
 ETC=${ROOT}/etc
 LOCAL=${ROOT}/usr/local
 INSTALL_CMD=cp
+lINK_CMD=ln -sf
 SUFFIX=-call
 BANENT=banent${SUFFIX}.sh
 
@@ -16,10 +17,10 @@ first: all
 all: banent unbanent
 
 banent: banent${SUFFIX}.sh
-	ln -sf banent${SUFFIX}.sh banent
+	${lINK_CMD} banent${SUFFIX}.sh banent
 
 unbanent: banent${SUFFIX}.sh
-	ln -sf banent${SUFFIX}.sh unbanent
+	${lINK_CMD} banent${SUFFIX}.sh unbanent
 
 clean:
 	rm -f banent unbanent
@@ -29,10 +30,10 @@ clean:
 install:
 	test -d ${BINDIR} || mkdir -p ${BINDIR}
 	${INSTALL_CMD} banent${SUFFIX}.sh ${BINDIR}
-	cd ${BINDIR} && ln -sf banent${SUFFIX}.sh banent && ln -sf banent${SUFFIX}.sh unbanent
-	test -d ${ETC} || mkdir -p ${ETC}
-	test -d ${ETC}/sudoers.d || mkdir -p ${ETC}/sudoers.d
-	${INSTALL_CMD} banent.sudoers ${ETC}/sudoers.d
+	cd ${BINDIR} && ${lINK_CMD} banent${SUFFIX}.sh banent && ${lINK_CMD} banent${SUFFIX}.sh unbanent
+	test ${SUFFIX} = -call || test -d ${ETC} || mkdir -p ${ETC}
+	test ${SUFFIX} = -call || test -d ${ETC}/sudoers.d || mkdir -p ${ETC}/sudoers.d
+	test ${SUFFIX} = -call || ${INSTALL_CMD} banent.sudoers ${ETC}/sudoers.d
 
 uninstall:
 	rm -f ${ETC}/sudoers.d/banent.sudoers
