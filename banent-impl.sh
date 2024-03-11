@@ -10,10 +10,10 @@ fi
 
 LOCAL_CMD=''
 for CONF in $CONFS; do
-  BAN=eval echo $BAN_TEMP
+  BAN=eval $BAN_TEMP
   ROLE=$(basename $0)
   if [ "$ROLE" = "unbanent" ]; then
-    BAN=eval echo $UNBAN_TEMP
+    BAN=eval $UNBAN_TEMP
   fi
   LOCAL_CMD="$LOCAL_CMD $BAN &&"
 done
