@@ -10,12 +10,12 @@ fi
 
 LOCAL_CMD=''
 for CONF in $CONFS; do
-  BAN=$(eval $BAN_TEMP)
+  BAN=$(eval echo -n $BAN_TEMP)
   ROLE=$(basename $0)
   if [ "$ROLE" = "unbanent" ]; then
-    BAN=$(eval $UNBAN_TEMP)
+    BAN=$(eval echo -n $UNBAN_TEMP)
   fi
-  LOCAL_CMD="$LOCAL_CMD $BAN &&"
+  LOCAL_CMD="$LOCAL_CMD $BAN"
 done
-LOCAL_CMD="$LOCAL_CMD fw3 reload"
 $LOCAL_CMD
+fw3 reload
