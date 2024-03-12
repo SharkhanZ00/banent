@@ -1,13 +1,13 @@
 #!/bin/bash
 
 REMOTE=$1
-echo "$REMOTE" | grep -E '^[0-9]+$' > /dev/null
+echo "$REMOTE" | grep -qE '^[0-9]+$'
 IS_DIGIT=$?
 if [ "z${REMOTE}z" = "zz" -o "$IS_DIGIT" = '0' ]; then
   exit 1
 else
   #TODO check $REMOTE begins with sss
-  REMOTE="$REMOTE  -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa" #TODO remove then OpenWrt (powered Dropbear SSH) starts support modern cyphers
+  REMOTE="ssh hass-rpc@$REMOTE -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa" #TODO remove then OpenWrt (powered Dropbear SSH) starts support modern cyphers
   shift
 fi
 
