@@ -2,7 +2,6 @@
 
 ROOT=/
 ETC=${ROOT}/etc
-LOCAL=${ROOT}/usr/local
 INSTALL_CMD=cp
 lINK_CMD=ln -sf
 SUFFIX=-call
@@ -37,7 +36,7 @@ install:
 
 uninstall:
 	rm -f ${ETC}/sudoers.d/banent
-	test -d ${LOCAL}
+	test -d ${ROOT}
 	rm -f ${BINDIR}/banent${SUFFIX}.sh ${BINDIR}/banent ${BINDIR}/unbanent
 
 ${BUILD}/banent-call.sh: banent-call.sh Makefile
@@ -50,7 +49,7 @@ ${BUILD}/banent-impl.sh: banent-impl.sh Makefile
 
 ${BUILD}/Makefile: Makefile
 	test -d ${BUILD} || mkdir -p ${BUILD}
-	sed -e 's|ROOT=/|ROOT=overlay/upper|' -e 's/SUFFIX=-call/SUFFIX=-impl/' Makefile > ${BUILD}/Makefile
+	sed -e 's|ROOT=/|ROOT=.|' -e 's/SUFFIX=-call/SUFFIX=-impl/' Makefile > ${BUILD}/Makefile
 
 ${BUILD}/banent: banent.sudoers
 	test -d ${BUILD} || mkdir -p ${BUILD}
@@ -60,4 +59,4 @@ ${BINDIR}/banent${SUFFIX}.sh: ${BUILD}/banent-call.sh ${BUILD}/banent-impl.sh ${
 	cd ./temp && make && make install
 
 ${TARBALL}: ${BINDIR}/banent${SUFFIX}.sh
-	tar -C ./temp --owner=root --group=root -czf ${TARBALL} overlay/
+	tar -C ./temp --owner=root --group=root -czf ${TARBALL} .
